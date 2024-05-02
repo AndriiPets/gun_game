@@ -18,6 +18,8 @@ func UpdateEnemies(ecs *ecs.ECS) {
 		health := components.Health.Get(e)
 		enemy := components.Enemy.Get(e)
 		enemyVelocity := components.Velocity.Get(e)
+		obj := components.Object.Get(e)
+		weapon := components.Shooter.Get(e)
 
 		//MOVEMENT
 
@@ -49,6 +51,10 @@ func UpdateEnemies(ecs *ecs.ECS) {
 		if !health.Hit && !health.Dead {
 			updateEnemyState(e, components.EnemyStateIdle)
 		}
+
+		//update weapon sprite position
+		centerX, centerY := obj.Position.X+(obj.Size.X/2), obj.Position.Y+(obj.Size.Y/2)
+		weapon.Position = math.NewVec2(centerX, centerY)
 
 	})
 }

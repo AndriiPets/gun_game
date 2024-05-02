@@ -19,6 +19,7 @@ type ShooterData struct {
 	CanFire        bool
 	Position       math.Vec2
 	HolderPosition math.Vec2
+	WeaponFlash    bool
 }
 
 var Shooter = donburi.NewComponentType[ShooterData]()

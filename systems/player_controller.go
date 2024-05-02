@@ -36,7 +36,7 @@ func UpdatePlayer(ecs *ecs.ECS) {
 	accel := 0.6
 	maxSpeed := 4.0
 
-	dashCooldown := 0.5
+	dashCooldown := 0.3
 
 	if !player.IsDashing {
 

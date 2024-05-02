@@ -2,6 +2,7 @@ package systems
 
 import (
 	"fmt"
+	"image/color"
 	"math"
 	"time"
 
@@ -11,6 +12,8 @@ import (
 	dresolv "github.com/AndriiPets/FishGame/resolv"
 	"github.com/AndriiPets/FishGame/resources"
 	"github.com/AndriiPets/FishGame/tags"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/solarlune/resolv"
 
 	"github.com/yohamta/donburi"
@@ -36,6 +39,10 @@ func UpdateShooters(ecs *ecs.ECS) {
 				events.ScreenShakeEvent.Publish(ecs.World, events.ScreenShake{Type: "recoil"})
 			}
 
+			//weapon sprite recoil
+			events.WeaponRecoilEvent.Publish(ecs.World, events.WeaponRecoil{Entry: e})
+			shooter.WeaponFlash = true
+
 			shooter.FireTime = time.Now()
 			shooter.CanFire = false
 			shooter.Fire = false
@@ -48,6 +55,27 @@ func UpdateShooters(ecs *ecs.ECS) {
 			}
 		}
 
+	})
+}
+
+func DrawWeaponFlash(ecs *ecs.ECS, screen *ebiten.Image) {
+	query := donburi.NewQuery(filter.Contains(components.Shooter, components.AttackVector))
+
+	query.Each(ecs.World, func(e *donburi.Entry) {
+		shooter := components.Shooter.Get(e)
+		weaponData := resources.WeaponMap[shooter.Type]
+		attackVec := components.AttackVector.Get(e).Vec
+		cooldown := weaponData.Cooldown / 2
+		spawnPosition := shooter.HolderPosition.Add(attackVec.MulScalar(22))
+
+		if !shooter.CanFire {
+
+			if time.Now().Sub(shooter.FireTime).Seconds() <= cooldown {
+				vector.DrawFilledCircle(screen, float32(spawnPosition.X), float32(spawnPosition.Y), 7, color.RGBA{225, 225, 225, 255}, false)
+
+			}
+
+		}
 	})
 }
 
@@ -71,6 +99,7 @@ func spawnBullet(e *donburi.Entry, ecs *ecs.ECS) {
 	//setup animation sprite
 	animation := components.Animation.Get(bullet)
 	bulletComp := components.Bullet.Get(bullet)
+
 	//rotate image
 	angle := math.Atan2(attackVec.Y, attackVec.X)
 	animation.Rotation = angle
@@ -101,7 +130,15 @@ func UpdateWeaponSprite(ecs *ecs.ECS) {
 		attVec := components.AttackVector.Get(e)
 
 		//update animation obj position based on shooter position
-		pos := dmath.Vec2(shooter.Position)
+		var pos dmath.Vec2
+
+		//if on cooldown recoil sprite backwards
+		if !shooter.CanFire {
+			pos = shooter.HolderPosition.Add(attVec.Vec.MulScalar(10))
+		} else {
+			pos = dmath.Vec2(shooter.Position)
+		}
+
 		obj := dresolv.GetObject(e)
 
 		obj.Position.X = pos.X

@@ -42,6 +42,12 @@
             "h": 8
         },
 
+        {
+            "file": "img/weapon_rifle.png",
+            "w": 30,
+            "h": 6
+        },
+
 
         {
             "file": "img/wall_32x32.png",
@@ -96,6 +102,12 @@
         {
             "name": "weapon_default",
             "file": "img/weapon_revolver.png",
+            "frames": ["1", "1"]
+        }, 
+
+        {
+            "name": "weapon_enemy_default",
+            "file": "img/weapon_rifle.png",
             "frames": ["1", "1"]
         }, 
 

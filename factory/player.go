@@ -11,7 +11,7 @@ import (
 	"github.com/yohamta/donburi/features/math"
 )
 
-func CreatePlayer(ecs *ecs.ECS, posX, PosY float64) *donburi.Entry {
+func CreatePlayer(ecs *ecs.ECS, posX, posY float64) *donburi.Entry {
 	player := archetypes.Player.Spawn(ecs)
 
 	//setup player initial state
@@ -24,7 +24,7 @@ func CreatePlayer(ecs *ecs.ECS, posX, PosY float64) *donburi.Entry {
 	animation.FlipH = false
 	animation.Type = components.AnimationActor
 
-	obj := resolv.NewObject(posX, PosY, 16, 16)
+	obj := resolv.NewObject(posX, posY, 16, 16)
 	//obj.AddTags("damageble")
 	dresolv.SetObject(player, obj)
 	components.Player.SetValue(player, components.PlayerData{
@@ -53,7 +53,7 @@ func CreatePlayer(ecs *ecs.ECS, posX, PosY float64) *donburi.Entry {
 	wSprite.SetComponent(components.Shooter, player.Component(components.Shooter))
 	wSprite.SetComponent(components.AttackVector, player.Component(components.AttackVector))
 
-	dresolv.SetObject(wSprite, resolv.NewObject(posX, PosY, 16, 16))
+	dresolv.SetObject(wSprite, resolv.NewObject(posX, posY, 16, 16))
 	wAnimation.Animation = shooter.Animation()
 	wAnimation.Type = components.AnimationFollow
 

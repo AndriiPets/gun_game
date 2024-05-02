@@ -15,7 +15,13 @@ type ScreenShake struct {
 	Type string
 }
 
+type WeaponRecoil struct {
+	Entry *donburi.Entry
+}
+
 var ScreenShakeEvent = events.NewEventType[ScreenShake]()
+
+var WeaponRecoilEvent = events.NewEventType[WeaponRecoil]()
 
 func OnRecoilScreenShake(w donburi.World, event ScreenShake) {
 
@@ -48,6 +54,11 @@ func OnRecoilScreenShake(w donburi.World, event ScreenShake) {
 	}
 }
 
+func WeaponSpriteRecoil(w donburi.World, event WeaponRecoil) {
+	shooter := components.Shooter.Get(event.Entry)
+	shooter.Position = shooter.HolderPosition
+}
+
 func WeaponFlash(w donburi.World, event ScreenShake) {
 
 	cameraEntity, _ := components.Camera.First(w)
@@ -59,6 +70,7 @@ func WeaponFlash(w donburi.World, event ScreenShake) {
 
 func SetupEvents(ecs *ecs.ECS) {
 	ScreenShakeEvent.Subscribe(ecs.World, OnRecoilScreenShake)
+	WeaponRecoilEvent.Subscribe(ecs.World, WeaponSpriteRecoil)
 }
 
 func UpdateEvents(ecs *ecs.ECS) {

@@ -3,7 +3,6 @@ package systems
 import (
 	//"fmt"
 
-	"fmt"
 	"time"
 
 	"github.com/AndriiPets/FishGame/components"
@@ -38,7 +37,7 @@ func updatePlayerCollisions(ecs *ecs.ECS) {
 
 		if col := object.Check(dx, 0); col != nil {
 			if col.HasTags("solid") {
-				dx = col.ContactWithCell(col.Cells[0]).X
+				dx = col.ContactWithCell(col.Cells[len(col.Cells)-1]).X
 			}
 
 			if col.HasTags("bullet") {
@@ -59,7 +58,7 @@ func updatePlayerCollisions(ecs *ecs.ECS) {
 
 		if col := object.Check(0, dy); col != nil {
 			if col.HasTags("solid") {
-				dy = col.ContactWithCell(col.Cells[0]).Y
+				dy = col.ContactWithCell(col.Cells[len(col.Cells)-1]).Y
 			}
 
 			if col.HasTags("bullet") {
@@ -86,11 +85,17 @@ func updatePlayerCollisions(ecs *ecs.ECS) {
 }
 
 func check_bullet_collision(ecs *ecs.ECS, col *resolv.Collision, query *donburi.Query) *donburi.Entry {
-	bullet := col.Objects[0]
+	var bulletID interface{}
 	var bulletEntity *donburi.Entry
-	fmt.Println(bullet.Data)
+
+	for _, c := range col.Objects {
+		if c.Data != nil {
+			bulletID = c.Data
+		}
+	}
+
 	query.Each(ecs.World, func(e *donburi.Entry) {
-		if bullet.Data == e.Id() {
+		if bulletID == e.Id() {
 			despawn := components.Despawnable.Get(e)
 			despawn.DespawnRequest = true
 			bulletEntity = e
