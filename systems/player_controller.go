@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/AndriiPets/FishGame/components"
+	"github.com/AndriiPets/FishGame/factory"
 	"github.com/AndriiPets/FishGame/tags"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -37,6 +38,7 @@ func UpdatePlayer(ecs *ecs.ECS) {
 	maxSpeed := 3.0
 
 	dashCooldown := 0.3
+	particleCooldown := 0.5
 
 	if !player.IsDashing {
 
@@ -143,6 +145,11 @@ func UpdatePlayer(ecs *ecs.ECS) {
 	//update animation
 	if !playerVelocity.Vel.IsZero() {
 		updatePlayerState(playerEntity, components.PlayerStateRun)
+
+		//dust particle spawn
+		playerSpawnDustParticle(ecs, playerEntity, particleCooldown)
+		//
+
 	} else {
 		updatePlayerState(playerEntity, components.PlayerStateIdle)
 	}
@@ -173,6 +180,32 @@ func PlayerString(ecs *ecs.ECS) string {
 		"Player T: %.1f",
 		math.NewVec2(p.Position.X, p.Position.Y),
 	)
+}
+
+func playerSpawnDustParticle(ecs *ecs.ECS, playerEntry *donburi.Entry, cooldown float64) {
+	player := components.Player.Get(playerEntry)
+	anim := components.Animation.Get(playerEntry)
+	playerObj := dresolv.GetObject(playerEntry)
+
+	//dust particle spawn
+	if !player.ParticleSpawn {
+		player.ParticleTimer = time.Now()
+		player.ParticleSpawn = true
+	}
+
+	if time.Now().Sub(player.ParticleTimer).Seconds() >= cooldown {
+		factory.CreateParticle(
+			ecs,
+			playerObj.Position.X,
+			playerObj.Position.Y,
+			factory.ParticleDust,
+			0,
+			anim.FlipH,
+			false,
+		)
+		player.ParticleSpawn = false
+	}
+	//
 }
 
 func updatePlayerState(entry *donburi.Entry, state components.PlayerState) {

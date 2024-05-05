@@ -15,12 +15,13 @@ var (
 )
 
 type AnimationData struct {
-	Animation *ganim8.Animation
-	Position  math.Vec2
-	Rotation  float64
-	FlipH     bool
-	FlipV     bool
-	Type      AnimationType
+	Animation     *ganim8.Animation
+	Position      math.Vec2
+	Rotation      float64
+	FlipH         bool
+	FlipV         bool
+	PlaybackSpeed float64
+	Type          AnimationType
 }
 
 var Animation = donburi.NewComponentType[AnimationData]()

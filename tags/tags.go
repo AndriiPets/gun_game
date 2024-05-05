@@ -9,4 +9,5 @@ var (
 	Bullet       = donburi.NewTag().SetName("bullet")
 	WeaponSprite = donburi.NewTag().SetName("WeaponSprite")
 	Enemy        = donburi.NewTag().SetName("enemy")
+	Particle     = donburi.NewTag().SetName("particle")
 )

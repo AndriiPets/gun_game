@@ -69,6 +69,7 @@ func (ms *MainScene) configure() {
 	ecs.AddSystem(systems.UpdateHealth)
 	ecs.AddSystem(systems.UpdateEnemies)
 	ecs.AddSystem(systems.UpdateAI)
+	ecs.AddSystem(systems.UpdateParticles)
 
 	ecs.AddSystem(events.UpdateEvents)
 
@@ -76,11 +77,19 @@ func (ms *MainScene) configure() {
 
 	//ecs.AddRenderer(layers.Default, systems.DrawWall)
 	ecs.AddRenderer(layers.Default, systems.DrawPlayer)
-	ecs.AddRenderer(layers.Default, systems.DrawWeaponFlash)
+	//ecs.AddRenderer(layers.Default, systems.DrawWeaponFlash)
+	ecs.AddRenderer(layers.Default, systems.DrawEnemyes)
 	ecs.AddRenderer(layers.Default, systems.DrawDebugAi)
 	//ecs.AddRenderer(layers.Default, systems.DrawBullet)
-	ecs.AddRenderer(layers.Default, systems.DrawAnimation)
-	ecs.AddRenderer(layers.Default, systems.DrawDebug)
+
+	//Draw animations for each layer
+	ecs.AddRenderer(layers.Player, systems.DrawAnimation(layers.Player))
+	ecs.AddRenderer(layers.Actors, systems.DrawAnimation(layers.Actors))
+	ecs.AddRenderer(layers.Architecture, systems.DrawAnimation(layers.Architecture))
+	ecs.AddRenderer(layers.Interactables, systems.DrawAnimation(layers.Interactables))
+	ecs.AddRenderer(layers.FX, systems.DrawAnimation(layers.FX))
+	ecs.AddRenderer(layers.System, systems.DrawDebug)
+	//
 
 	ms.ecs = ecs
 

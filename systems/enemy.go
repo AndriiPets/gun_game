@@ -2,14 +2,19 @@ package systems
 
 import (
 	"fmt"
+	"image/color"
 	mmath "math"
 
 	"github.com/AndriiPets/FishGame/components"
 	"github.com/AndriiPets/FishGame/tags"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/features/math"
 	"github.com/yohamta/donburi/filter"
+
+	dresolv "github.com/AndriiPets/FishGame/resolv"
 )
 
 func UpdateEnemies(ecs *ecs.ECS) {
@@ -103,4 +108,15 @@ func updateEnemyState(entry *donburi.Entry, state components.EnemyState) {
 	//update animation
 	animation := components.Animation.Get(entry)
 	animation.Animation = anim
+}
+
+func DrawEnemyes(ecs *ecs.ECS, screen *ebiten.Image) {
+	tags.Enemy.Each(ecs.World, func(e *donburi.Entry) {
+
+		o := dresolv.GetObject(e)
+		playerColor := color.RGBA{0, 255, 60, 255}
+
+		vector.DrawFilledRect(screen, float32(o.Position.X), float32(o.Position.Y), float32(o.Size.X), float32(o.Size.Y), playerColor, false)
+		//vector.DrawFilledCircle(screen, float32(weaponPosX), float32(weaponPosY), 7, color.RGBA{255, 255, 255, 255}, false)
+	})
 }

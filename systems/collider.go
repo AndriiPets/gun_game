@@ -40,18 +40,20 @@ func updatePlayerCollisions(ecs *ecs.ECS) {
 				dx = col.ContactWithCell(col.Cells[len(col.Cells)-1]).X
 			}
 
-			if col.HasTags("bullet") {
-				if !health.Dead {
-					bullet := check_bullet_collision(ecs, col, bQuery)
-					bulletVec := components.Velocity.Get(bullet).Vel.Normalized().MulScalar(5)
-					//centerX := object.Position.X + (object.Size.X / 2)
-					velocity.Vel = bulletVec
-					velocity.Speed = 2
-					health.Hit = true
-					health.HitTime = time.Now()
-					damage = 1
+			if bullets := col.ObjectsByTags("bullet"); len(bullets) > 0 {
+				bullet := bullets[0]
+				if object.Overlaps(bullet) {
+					if !health.Dead {
+						damage = apply_colision_with_bullet(ecs, e, col, bQuery)
+					}
 				}
 			}
+
+			//if col.HasTags("bullet") {
+			//	if !health.Dead {
+			//		damage = apply_colision_with_bullet(ecs, e, col, bQuery)
+			//	}
+			//}
 		}
 
 		object.Position.X += dx
@@ -61,18 +63,20 @@ func updatePlayerCollisions(ecs *ecs.ECS) {
 				dy = col.ContactWithCell(col.Cells[len(col.Cells)-1]).Y
 			}
 
-			if col.HasTags("bullet") {
-				if !health.Dead {
-					bullet := check_bullet_collision(ecs, col, bQuery)
-					bulletVec := components.Velocity.Get(bullet).Vel.Normalized().MulScalar(5)
-					//centerY := object.Position.Y + (object.Size.Y / 2)
-					velocity.Vel = bulletVec
-					velocity.Speed = 2
-					health.Hit = true
-					health.HitTime = time.Now()
-					damage = 1
+			if bullets := col.ObjectsByTags("bullet"); len(bullets) > 0 {
+				bullet := bullets[0]
+				if object.Overlaps(bullet) {
+					if !health.Dead {
+						damage = apply_colision_with_bullet(ecs, e, col, bQuery)
+					}
 				}
 			}
+
+			//if col.HasTags("bullet") {
+			//	if !health.Dead {
+			//		damage = apply_colision_with_bullet(ecs, e, col, bQuery)
+			//	}
+			//}
 		}
 
 		object.Position.Y += dy
@@ -103,6 +107,22 @@ func check_bullet_collision(ecs *ecs.ECS, col *resolv.Collision, query *donburi.
 	})
 
 	return bulletEntity
+}
+
+func apply_colision_with_bullet(ecs *ecs.ECS, e *donburi.Entry, col *resolv.Collision, query *donburi.Query) int {
+	velocity := components.Velocity.Get(e)
+	health := components.Health.Get(e)
+
+	bullet := check_bullet_collision(ecs, col, query)
+	bulletVec := components.Velocity.Get(bullet).Vel.Normalized().MulScalar(5)
+	//centerY := object.Position.Y + (object.Size.Y / 2)
+	velocity.Vel = bulletVec
+	velocity.Speed = 2
+	health.Hit = true
+	health.HitTime = time.Now()
+	damage := 1
+
+	return damage
 }
 
 func updateBulletCollisions(ecs *ecs.ECS) {

@@ -10,10 +10,12 @@ import (
 )
 
 type PlayerData struct {
-	FacingRight bool
-	IsDashing   bool
-	State       PlayerState
-	DashTimer   time.Time
+	FacingRight   bool
+	IsDashing     bool
+	State         PlayerState
+	DashTimer     time.Time
+	ParticleTimer time.Time
+	ParticleSpawn bool
 }
 
 type PlayerState string

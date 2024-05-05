@@ -8,6 +8,7 @@ import (
 	"github.com/AndriiPets/FishGame/archetypes"
 	"github.com/AndriiPets/FishGame/components"
 	"github.com/AndriiPets/FishGame/events"
+	"github.com/AndriiPets/FishGame/factory"
 	dresolv "github.com/AndriiPets/FishGame/resolv"
 	"github.com/AndriiPets/FishGame/resources"
 	"github.com/AndriiPets/FishGame/tags"
@@ -71,6 +72,7 @@ func DrawWeaponFlash(ecs *ecs.ECS, screen *ebiten.Image) {
 
 			if time.Now().Sub(shooter.FireTime).Seconds() <= cooldown {
 				vector.DrawFilledCircle(screen, float32(spawnPosition.X), float32(spawnPosition.Y), 7, color.RGBA{225, 225, 225, 255}, false)
+				//vector.DrawFilledRect(screen, float32(spawnPosition.X), float32(spawnPosition.Y), 32, 32, color.RGBA{225, 225, 225, 255}, false)
 
 			}
 
@@ -158,5 +160,19 @@ func UpdateWeaponSprite(ecs *ecs.ECS) {
 			anim.FlipV = true
 		}
 
+		//Spawn weapon flash animation
+		if shooter.WeaponFlash {
+			spawnPosition := shooter.HolderPosition.Add(attVec.Vec.MulScalar(37))
+			factory.CreateParticle(
+				ecs,
+				spawnPosition.X,
+				spawnPosition.Y,
+				factory.ParticleGunFlash,
+				anim.Rotation,
+				anim.FlipH,
+				anim.FlipV,
+			)
+			shooter.WeaponFlash = false
+		}
 	})
 }

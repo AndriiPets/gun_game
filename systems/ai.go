@@ -8,6 +8,7 @@ import (
 	"github.com/AndriiPets/FishGame/components"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/solarlune/resolv"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	dmath "github.com/yohamta/donburi/features/math"
@@ -17,7 +18,8 @@ import (
 func UpdateAI(ecs *ecs.ECS) {
 	query := donburi.NewQuery(filter.Contains(components.AI, components.Object, components.AttackVector, components.Health, components.Shooter))
 	playerEntity := components.Player.MustFirst(ecs.World)
-	playerObjPos := components.Object.Get(playerEntity).Position
+	playerObj := components.Object.Get(playerEntity)
+	playerObjPos := playerObj.Position
 
 	query.Each(ecs.World, func(e *donburi.Entry) {
 		health := components.Health.Get(e)
@@ -36,8 +38,12 @@ func UpdateAI(ecs *ecs.ECS) {
 				enemyVec := dmath.NewVec2(obj.Position.X, obj.Position.Y)
 				attVec.Vec = playerVec.Sub(enemyVec).Normalized()
 
-				if roll_attack_initiative(ai.AgressionModifier, 100) && shooter.CanFire {
-					shooter.Fire = true
+				if line_of_sight_check(ecs, obj, playerObj) {
+
+					if roll_attack_initiative(ai.AgressionModifier, 100) && shooter.CanFire {
+						shooter.Fire = true
+					}
+
 				}
 			}
 		}
@@ -53,6 +59,32 @@ func in_circle(centerX, centerY, radius, x, y float64) bool {
 func roll_attack_initiative(modifier, limit int) bool {
 	roll := rand.Intn(limit)
 	return roll <= modifier
+}
+
+func line_of_sight_check(ecs *ecs.ECS, startObj, endObj *resolv.Object) bool {
+	spaceEntry := components.Space.MustFirst(ecs.World)
+	space := components.Space.Get(spaceEntry)
+
+	cx, cy := startObj.CellPosition()
+	mx, my := endObj.CellPosition()
+
+	sightLine := space.CellsInLine(cx, cy, mx, my)
+	//fmt.Println(startX, startY)
+
+	for i, cell := range sightLine {
+
+		//if not yourself
+		if i == 0 {
+			continue
+		}
+
+		if cell.ContainsTags("solid") {
+			return false
+		}
+	}
+
+	return true
+
 }
 
 func DrawDebugAi(ecs *ecs.ECS, screen *ebiten.Image) {

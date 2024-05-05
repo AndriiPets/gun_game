@@ -13,6 +13,12 @@
         },
 
         {
+            "file": "img/particle_effects.png",
+            "w": 32,
+            "h": 32
+        },
+
+        {
             "file": "img/weapon_knife.png",
             "w": 6,
             "h": 13
@@ -97,6 +103,18 @@
             "name": "orc_hit",
             "file": "img/enemy_orc.png",
             "frames": ["2", "3"]
+        },
+
+        {
+            "name": "particle_gun_flash",
+            "file": "img/particle_effects.png",
+            "frames": ["1-8", "2"]
+        },
+
+        {
+            "name": "particle_dust",
+            "file": "img/particle_effects.png",
+            "frames": ["1-6", "3"]
         },
 
         {

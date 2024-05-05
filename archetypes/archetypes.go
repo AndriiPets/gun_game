@@ -11,6 +11,7 @@ import (
 
 var (
 	Player = NewArchetype(
+		layers.Player,
 		tags.Player,
 		components.Player,
 		components.Animation,
@@ -23,6 +24,7 @@ var (
 	)
 
 	Enemy = NewArchetype(
+		layers.Actors,
 		tags.Enemy,
 		components.Enemy,
 		components.AI,
@@ -36,6 +38,7 @@ var (
 	)
 
 	Bullet = NewArchetype(
+		layers.Interactables,
 		tags.Bullet,
 		components.Bullet,
 		components.Object,
@@ -46,6 +49,7 @@ var (
 	)
 
 	BouncerBullet = NewArchetype(
+		layers.Interactables,
 		tags.Bullet,
 		components.Bullet,
 		components.Object,
@@ -56,6 +60,7 @@ var (
 	)
 
 	Wall = NewArchetype(
+		layers.Architecture,
 		tags.Wall,
 		components.Block,
 		components.Object,
@@ -63,35 +68,48 @@ var (
 	)
 
 	Space = NewArchetype(
+		layers.System,
 		components.Space,
 	)
 
 	Camera = NewArchetype(
+		layers.System,
 		components.Camera,
 	)
 
 	WeaponSprite = NewArchetype(
+		layers.Interactables,
 		tags.WeaponSprite,
 		components.Shooter,
 		components.AttackVector,
 		components.Animation,
 		components.Object,
 	)
+
+	ParticleSprite = NewArchetype(
+		layers.FX,
+		tags.Particle,
+		components.Animation,
+		components.Object,
+		components.Despawnable,
+	)
 )
 
 type Archetype struct {
 	Components []donburi.IComponentType
+	Layer      ecs.LayerID
 }
 
-func NewArchetype(cs ...donburi.IComponentType) *Archetype {
+func NewArchetype(layer ecs.LayerID, cs ...donburi.IComponentType) *Archetype {
 	return &Archetype{
 		Components: cs,
+		Layer:      layer,
 	}
 }
 
 func (a *Archetype) Spawn(ecs *ecs.ECS, cs ...donburi.IComponentType) *donburi.Entry {
 	e := ecs.World.Entry(ecs.Create(
-		layers.Default,
+		a.Layer,
 		append(a.Components, cs...)...,
 	))
 
