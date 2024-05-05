@@ -18,7 +18,7 @@ type PlayerData struct {
 
 type PlayerState string
 
-var (
+const (
 	PlayerStateIdle PlayerState = "idle"
 	PlayerStateRun  PlayerState = "run"
 )

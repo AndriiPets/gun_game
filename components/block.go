@@ -13,7 +13,7 @@ type BlockData struct {
 
 type BlockType string
 
-var (
+const (
 	BlockWall  BlockType = "wall"
 	BlockFloor BlockType = "floor"
 )

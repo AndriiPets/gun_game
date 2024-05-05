@@ -5,6 +5,7 @@ import (
 	mmath "math"
 
 	"github.com/AndriiPets/FishGame/components"
+	"github.com/AndriiPets/FishGame/tags"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/features/math"
@@ -12,7 +13,7 @@ import (
 )
 
 func UpdateEnemies(ecs *ecs.ECS) {
-	query := donburi.NewQuery(filter.Contains(components.Enemy))
+	query := donburi.NewQuery(filter.Contains(tags.Enemy))
 
 	query.Each(ecs.World, func(e *donburi.Entry) {
 		health := components.Health.Get(e)
@@ -20,6 +21,7 @@ func UpdateEnemies(ecs *ecs.ECS) {
 		enemyVelocity := components.Velocity.Get(e)
 		obj := components.Object.Get(e)
 		weapon := components.Shooter.Get(e)
+		attVec := components.AttackVector.Get(e).Vec
 
 		//MOVEMENT
 
@@ -52,11 +54,38 @@ func UpdateEnemies(ecs *ecs.ECS) {
 			updateEnemyState(e, components.EnemyStateIdle)
 		}
 
+		//update enemy facing direction
+		enemyVec := math.NewVec2(obj.Position.X, 0).Normalized()
+		dot := attVec.Dot(&enemyVec)
+		//fmt.Println(dot)
+
+		if dot > 0 {
+			flip(e, false)
+			//fmt.Println("flip false")
+		}
+		if dot < 0 {
+			flip(e, true)
+			//fmt.Println("flip true")
+		}
+		//
+
 		//update weapon sprite position
 		centerX, centerY := obj.Position.X+(obj.Size.X/2), obj.Position.Y+(obj.Size.Y/2)
-		weapon.Position = math.NewVec2(centerX, centerY)
+		weapon.Position = math.NewVec2(centerX+attVec.X, centerY+attVec.Y)
+		weapon.HolderPosition = math.NewVec2(centerX, centerY)
 
 	})
+}
+
+func flip(entry *donburi.Entry, flipH bool) {
+	anim := components.Animation.Get(entry)
+
+	if anim.FlipH == flipH {
+		return
+	}
+
+	anim.FlipH = flipH
+	//fmt.Println(anim.FlipH, entry.Id())
 }
 
 func updateEnemyState(entry *donburi.Entry, state components.EnemyState) {

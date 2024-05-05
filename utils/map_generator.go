@@ -74,6 +74,8 @@ func (w *World) GenerateMap(genType GenerationType) {
 		player_pos := start.Center()
 		fmt.Println(w.Map.Get(player_pos.X, player_pos.Y))
 		w.Map.Set(player_pos.X, player_pos.Y, 'P')
+		w.Map.Set(player_pos.X+5, player_pos.Y, 'e')
+		w.Map.Set(player_pos.X+1, player_pos.Y+1, 'e')
 
 	case DrunkWalk:
 		startX, startY := w.Map.GenerateDrunkWalk(' ', 'x', 0.8)
@@ -96,7 +98,7 @@ func (w *World) GenerateMap(genType GenerationType) {
 
 	// Add a different tile for an alternate floor
 	mapSelection.FilterByRune(' ').FilterByPercentage(0.1).Fill('.')
-	mapSelection.FilterByRune(' ').FilterByPercentage(0.02).Fill('e')
+	//mapSelection.FilterByRune(' ').FilterByPercentage(0.01).Fill('e')
 
 	fmt.Println(w.Map.DataToString())
 }

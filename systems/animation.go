@@ -14,8 +14,6 @@ func UpdateAnimations(ecs *ecs.ECS) {
 	components.Animation.Each(ecs.World, func(e *donburi.Entry) {
 		a := components.Animation.Get(e)
 		a.Animation.Update()
-		a.Animation.Sprite().SetFlipH(a.FlipH)
-		a.Animation.Sprite().SetFlipV(a.FlipV)
 	})
 }
 
@@ -23,6 +21,9 @@ func DrawAnimation(ecs *ecs.ECS, screen *ebiten.Image) {
 	components.Animation.Each(ecs.World, func(e *donburi.Entry) {
 		a := components.Animation.Get(e)
 		o := dresolv.GetObject(e)
+
+		a.Animation.Sprite().SetFlipH(a.FlipH)
+		a.Animation.Sprite().SetFlipV(a.FlipV)
 
 		middleX := o.Position.X
 		origin_offset := 0.5

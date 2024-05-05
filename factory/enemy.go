@@ -29,6 +29,13 @@ func CreateEnemy(ecs *ecs.ECS, posX, posY float64, enemyType components.EnemyTyp
 		CanFire: true,
 	})
 
+	//setup ai
+	components.AI.SetValue(enemyEntry, components.AIData{
+		AIType:            components.AITypeShooter,
+		VisionRadius:      200,
+		AgressionModifier: 3,
+	})
+
 	//setup animation
 	animation := components.Animation.Get(enemyEntry)
 	animation.Animation = enemy.Animation()

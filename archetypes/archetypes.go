@@ -25,6 +25,7 @@ var (
 	Enemy = NewArchetype(
 		tags.Enemy,
 		components.Enemy,
+		components.AI,
 		components.Animation,
 		components.Object,
 		components.CollistionPlayer,

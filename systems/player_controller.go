@@ -33,8 +33,8 @@ func UpdatePlayer(ecs *ecs.ECS) {
 	//MOVEMENT
 	//dx, dy := 0.0, 0.0 //direction vector
 	friction := 0.9
-	accel := 0.6
-	maxSpeed := 4.0
+	accel := 0.4
+	maxSpeed := 3.0
 
 	dashCooldown := 0.3
 
@@ -184,12 +184,9 @@ func updatePlayerState(entry *donburi.Entry, state components.PlayerState) {
 
 	player.State = state
 
-	anim := player.Animation()
-	//fmt.Println("change state!")
-
 	//update animation
 	animation := components.Animation.Get(entry)
-	animation.Animation = anim
+	animation.Animation = player.Animation()
 }
 
 func DrawPlayer(ecs *ecs.ECS, screen *ebiten.Image) {

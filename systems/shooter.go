@@ -1,7 +1,6 @@
 package systems
 
 import (
-	"fmt"
 	"image/color"
 	"math"
 	"time"
@@ -30,7 +29,7 @@ func UpdateShooters(ecs *ecs.ECS) {
 		weaponData := resources.WeaponMap[shooter.Type]
 
 		if shooter.Fire && shooter.CanFire {
-			fmt.Println("Fire shooter\nCooldown:", weaponData.Cooldown)
+			//fmt.Println("Fire shooter\nCooldown:", weaponData.Cooldown)
 			//spawn bullet
 			spawnBullet(e, ecs)
 
@@ -51,7 +50,7 @@ func UpdateShooters(ecs *ecs.ECS) {
 		if !shooter.CanFire {
 			if time.Now().Sub(shooter.FireTime).Seconds() >= weaponData.Cooldown {
 				shooter.CanFire = true
-				fmt.Println("Cooldown over, can fire")
+				//fmt.Println("Cooldown over, can fire")
 			}
 		}
 
@@ -92,7 +91,7 @@ func spawnBullet(e *donburi.Entry, ecs *ecs.ECS) {
 
 	weaponData := resources.WeaponMap[shooter.Type]
 	bulletData := resources.ProjectileMap[weaponData.Bullet]
-	fmt.Println(weaponData.Bullet)
+	//fmt.Println(weaponData.Bullet)
 
 	bullet := bulletSpawnMap[weaponData.Bullet].Spawn(ecs)
 
