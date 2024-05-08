@@ -38,7 +38,7 @@ func UpdatePlayer(ecs *ecs.ECS) {
 	maxSpeed := 3.0
 
 	dashCooldown := 0.3
-	particleCooldown := 0.5
+	particleCooldown := 0.3
 
 	if !player.IsDashing {
 
@@ -196,7 +196,7 @@ func playerSpawnDustParticle(ecs *ecs.ECS, playerEntry *donburi.Entry, cooldown 
 	if time.Now().Sub(player.ParticleTimer).Seconds() >= cooldown {
 		factory.CreateParticle(
 			ecs,
-			playerObj.Position.X,
+			playerObj.Position.X+(playerObj.Size.X/2),
 			playerObj.Position.Y,
 			factory.ParticleDust,
 			0,

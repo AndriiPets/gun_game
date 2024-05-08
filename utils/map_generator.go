@@ -74,7 +74,7 @@ func (w *World) GenerateMap(genType GenerationType) {
 		player_pos := start.Center()
 		fmt.Println(w.Map.Get(player_pos.X, player_pos.Y))
 		w.Map.Set(player_pos.X, player_pos.Y, 'P')
-		w.Map.Set(player_pos.X+5, player_pos.Y, 'e')
+		//w.Map.Set(player_pos.X+5, player_pos.Y, 'e')
 		w.Map.Set(player_pos.X+1, player_pos.Y+1, 'e')
 
 	case DrunkWalk:

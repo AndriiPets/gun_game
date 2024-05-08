@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"sync"
 
+	"github.com/AndriiPets/FishGame/archetypes"
 	"github.com/AndriiPets/FishGame/assets"
 	"github.com/AndriiPets/FishGame/components"
 	"github.com/AndriiPets/FishGame/config"
@@ -14,6 +15,7 @@ import (
 	"github.com/AndriiPets/FishGame/layers"
 	dresolv "github.com/AndriiPets/FishGame/resolv"
 	"github.com/AndriiPets/FishGame/systems"
+	"github.com/AndriiPets/FishGame/systems/ai"
 	"github.com/AndriiPets/FishGame/utils"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/solarlune/resolv"
@@ -68,7 +70,7 @@ func (ms *MainScene) configure() {
 	ecs.AddSystem(systems.UpdateWeaponSprite)
 	ecs.AddSystem(systems.UpdateHealth)
 	ecs.AddSystem(systems.UpdateEnemies)
-	ecs.AddSystem(systems.UpdateAI)
+	ecs.AddSystem(ai.UpdateAI)
 	ecs.AddSystem(systems.UpdateParticles)
 
 	ecs.AddSystem(events.UpdateEvents)
@@ -79,7 +81,7 @@ func (ms *MainScene) configure() {
 	ecs.AddRenderer(layers.Default, systems.DrawPlayer)
 	//ecs.AddRenderer(layers.Default, systems.DrawWeaponFlash)
 	ecs.AddRenderer(layers.Default, systems.DrawEnemyes)
-	ecs.AddRenderer(layers.Default, systems.DrawDebugAi)
+	ecs.AddRenderer(layers.Default, ai.DrawDebugAi)
 	//ecs.AddRenderer(layers.Default, systems.DrawBullet)
 
 	//Draw animations for each layer
@@ -118,6 +120,14 @@ func (ms *MainScene) configure() {
 
 		}
 	}
+
+	//create pathfinder object
+	pathfinder := utils.NewPathFinder()
+	pathfinder.GenerateLayout(world.Map.Data, 'x')
+
+	//make avaliable to components by wrapping in entity
+	pFinder := archetypes.PathFinder.Spawn(ms.ecs)
+	components.PathFinder.Set(pFinder, pathfinder)
 
 	//dresolv.Add(space,
 	//	factory.CreateWall(ms.ecs, resolv.NewObject(0, 0, 16, gh), components.BlockWall),

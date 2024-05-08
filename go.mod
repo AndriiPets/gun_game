@@ -6,6 +6,7 @@ require (
 	github.com/ebitengine/purego v0.6.0 // indirect
 	github.com/hajimehoshi/ebiten/v2 v2.6.6 // indirect
 	github.com/jezek/xgb v1.1.0 // indirect
+	github.com/quasilyte/pathing v0.0.0-20231012081721-0370212e864a // indirect
 	github.com/solarlune/dngn v0.0.0-20230827152346-e9a1e2a5a868 // indirect
 	github.com/solarlune/resolv v0.7.0 // indirect
 	github.com/yohamta/donburi v1.3.13 // indirect

@@ -20,6 +20,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/pkg/browser v0.0.0-20180916011732-0a3d74bf9ce4/go.mod h1:4OwLy04Bl9Ef3GJJCoec+30X3LQs/0/m4HFRt/2LUSA=
+github.com/quasilyte/pathing v0.0.0-20231012081721-0370212e864a h1:CwrQZtrJxlaDc2H2+EQc5Y2Eo6lhMJcjDi9iD4Z195c=
+github.com/quasilyte/pathing v0.0.0-20231012081721-0370212e864a/go.mod h1:fxhN3GI+oH3/CevV4WAvx/TQdfm8FM68CfxdirgfAes=
 github.com/solarlune/dngn v0.0.0-20230827152346-e9a1e2a5a868 h1:E1q8/IuTqkZs1hGGphIXTYvrae9ckHvzDPh32NXdTJQ=
 github.com/solarlune/dngn v0.0.0-20230827152346-e9a1e2a5a868/go.mod h1:z8y2c7xJfPIExNipx0TOJhScvuNrViH5A2VREbMtyJ4=
 github.com/solarlune/resolv v0.7.0 h1:xppOLy3hRy9AB5khJVVUlwiWdFZGSLwAOODAoZ6508A=

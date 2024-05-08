@@ -9,6 +9,7 @@ import (
 	"github.com/AndriiPets/FishGame/tags"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/quasilyte/pathing"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 	"github.com/yohamta/donburi/features/math"
@@ -27,12 +28,33 @@ func UpdateEnemies(ecs *ecs.ECS) {
 		obj := components.Object.Get(e)
 		weapon := components.Shooter.Get(e)
 		attVec := components.AttackVector.Get(e).Vec
+		ai := components.AI.Get(e)
 
 		//MOVEMENT
 
 		friction := 0.9
-		//accel := 0.6
-		maxSpeed := 4.0
+		accel := 0.2
+		maxSpeed := 2.0
+
+		//move enemy according to pathfinding directions
+		if !health.Hit && !health.Dead {
+			switch ai.PathCurrent {
+			case pathing.DirRight:
+				enemyVelocity.Vel = math.NewVec2(1, 0)
+				enemyVelocity.Speed += accel
+			case pathing.DirLeft:
+				enemyVelocity.Vel = math.NewVec2(-1, 0)
+				enemyVelocity.Speed += accel
+			case pathing.DirUp:
+				enemyVelocity.Vel = math.NewVec2(0, -1)
+				enemyVelocity.Speed += accel
+			case pathing.DirDown:
+				enemyVelocity.Vel = math.NewVec2(0, 1)
+				enemyVelocity.Speed += accel
+			case pathing.DirNone:
+				enemyVelocity.Vel = math.NewVec2(0, 0)
+			}
+		}
 
 		// Apply friction and horizontal speed limiting.
 		enemyVelocity.Speed *= friction
@@ -56,7 +78,11 @@ func UpdateEnemies(ecs *ecs.ECS) {
 		}
 
 		if !health.Hit && !health.Dead {
-			updateEnemyState(e, components.EnemyStateIdle)
+			if !enemyVelocity.Vel.IsZero() {
+				updateEnemyState(e, components.EnemyStateRun)
+			} else {
+				updateEnemyState(e, components.EnemyStateIdle)
+			}
 		}
 
 		//update enemy facing direction

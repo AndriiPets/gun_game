@@ -72,6 +72,11 @@ var (
 		components.Space,
 	)
 
+	PathFinder = NewArchetype(
+		layers.System,
+		components.PathFinder,
+	)
+
 	Camera = NewArchetype(
 		layers.System,
 		components.Camera,
