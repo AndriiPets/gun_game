@@ -4,6 +4,8 @@ import (
 	"github.com/AndriiPets/FishGame/archetypes"
 	"github.com/AndriiPets/FishGame/components"
 	dresolv "github.com/AndriiPets/FishGame/resolv"
+	"github.com/tanema/gween"
+	"github.com/tanema/gween/ease"
 
 	"github.com/solarlune/resolv"
 	"github.com/yohamta/donburi"
@@ -32,9 +34,10 @@ func CreatePlayer(ecs *ecs.ECS, posX, posY float64) *donburi.Entry {
 		IsDashing:   false,
 	})
 	components.Shooter.SetValue(player, components.ShooterData{
-		Type:    "default", //bouncer, //default
-		Fire:    false,
-		CanFire: true,
+		Type:      "default", //bouncer, //default
+		Fire:      false,
+		CanFire:   true,
+		HoldRange: 15,
 	})
 	components.Velocity.SetValue(player, components.VelocityData{
 		Vel: math.NewVec2(0, 0),
@@ -56,6 +59,7 @@ func CreatePlayer(ecs *ecs.ECS, posX, posY float64) *donburi.Entry {
 	dresolv.SetObject(wSprite, resolv.NewObject(posX, posY, 16, 16))
 	wAnimation.Animation = shooter.Animation()
 	wAnimation.Type = components.AnimationFollow
+	wAnimation.Ease = gween.New(1, 5, 10, ease.Linear)
 
 	//dresolv.Add(space, wSprite)
 

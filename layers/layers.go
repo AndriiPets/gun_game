@@ -7,8 +7,8 @@ const (
 	Background
 	Architecture
 	Actors
-	Interactables
 	FX
 	Player
+	Interactables
 	System
 )

@@ -5,6 +5,8 @@ import (
 	"github.com/AndriiPets/FishGame/components"
 	dresolv "github.com/AndriiPets/FishGame/resolv"
 	"github.com/solarlune/resolv"
+	"github.com/tanema/gween"
+	"github.com/tanema/gween/ease"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
 )
@@ -24,9 +26,10 @@ func CreateEnemy(ecs *ecs.ECS, posX, posY float64, enemyType components.EnemyTyp
 
 	//setup shooter
 	components.Shooter.SetValue(enemyEntry, components.ShooterData{
-		Type:    "enemy_default", //bouncer, //default
-		Fire:    false,
-		CanFire: true,
+		Type:      "enemy_default", //bouncer, //default
+		Fire:      false,
+		CanFire:   true,
+		HoldRange: 10,
 	})
 
 	//setup ai
@@ -58,6 +61,7 @@ func CreateEnemy(ecs *ecs.ECS, posX, posY float64, enemyType components.EnemyTyp
 	dresolv.SetObject(wSprite, resolv.NewObject(posX, posY, 16, 16))
 	wAnimation.Animation = shooter.Animation()
 	wAnimation.Type = components.AnimationFollow
+	wAnimation.Ease = gween.New(1, 10, 1, ease.Linear)
 
 	return enemyEntry
 

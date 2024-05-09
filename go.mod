@@ -9,6 +9,7 @@ require (
 	github.com/quasilyte/pathing v0.0.0-20231012081721-0370212e864a // indirect
 	github.com/solarlune/dngn v0.0.0-20230827152346-e9a1e2a5a868 // indirect
 	github.com/solarlune/resolv v0.7.0 // indirect
+	github.com/tanema/gween v0.0.0-20221212145351-621cc8a459d1 // indirect
 	github.com/yohamta/donburi v1.3.13 // indirect
 	github.com/yohamta/ganim8/v2 v2.1.29 // indirect
 	golang.org/x/exp v0.0.0-20221126150942-6ab00d035af9 // indirect

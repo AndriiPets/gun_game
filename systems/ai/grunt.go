@@ -1,9 +1,8 @@
 package ai
 
 import (
-	"fmt"
-
 	"github.com/AndriiPets/FishGame/components"
+	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/quasilyte/pathing"
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -39,6 +38,10 @@ func UpdateGruntAI(ecs *ecs.ECS, enemy *donburi.Entry, player *donburi.Entry) {
 		}
 
 		ai.PathCurrent = ai.Path.Steps.Next()
-		fmt.Println(ai.Path.Steps.String(), ai.PathCurrent)
+
+		if ebiten.IsKeyPressed(ebiten.KeyV) {
+			ai.Path.Steps.Rewind()
+		}
+		//fmt.Println(ai.Path.Steps.String(), ai.PathCurrent)
 	}
 }

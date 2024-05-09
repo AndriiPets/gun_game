@@ -1,15 +1,18 @@
 package utils
 
 import (
+	"image/color"
 	"math"
 
 	"github.com/AndriiPets/FishGame/config"
+	"github.com/hajimehoshi/ebiten/v2"
+	"github.com/hajimehoshi/ebiten/v2/vector"
 	path "github.com/quasilyte/pathing"
 )
 
 type PathFinder struct {
 	Grid   *path.Grid
-	Layers []path.GridLayer
+	Layers path.GridLayer
 	BFS    *path.GreedyBFS
 	AStar  *path.AStar
 }
@@ -69,25 +72,25 @@ func (p *PathFinder) GenerateLayout(data [][]rune, wall rune) {
 		TileWall:  0,
 	})
 
-	airLayer := path.MakeGridLayer([4]uint8{
-		TileFloor: 1,
-		TileWall:  1,
-	})
+	//airLayer := path.MakeGridLayer([4]uint8{
+	//	TileFloor: 1,
+	//	TileWall:  1,
+	//})
 
-	p.Layers = append(p.Layers, groundltLayer, airLayer)
+	p.Layers = groundltLayer
 }
 
 func (p *PathFinder) MakePath(startX, startY, endX, endY float64, algo PathAlgo) path.BuildPathResult {
-	startPos := p.CoordToGrid(startX, startY)
-	endPos := p.CoordToGrid(endX, endY)
+	startPos := p.Grid.PosToCoord(startX, startY)
+	endPos := p.Grid.PosToCoord(endX, endY)
 
 	var steps path.BuildPathResult
 
 	switch algo {
 	case "bfs":
-		steps = p.BFS.BuildPath(p.Grid, startPos, endPos, p.Layers[0])
+		steps = p.BFS.BuildPath(p.Grid, startPos, endPos, p.Layers)
 	case "astar":
-		steps = p.AStar.BuildPath(p.Grid, startPos, endPos, p.Layers[0])
+		steps = p.AStar.BuildPath(p.Grid, startPos, endPos, p.Layers)
 	}
 
 	return steps
@@ -97,4 +100,15 @@ func (p *PathFinder) CoordToGrid(x, y float64) path.GridCoord {
 	fx := int(math.Floor(x / float64(config.BlockSize)))
 	fy := int(math.Floor(y / float64(config.BlockSize)))
 	return path.GridCoord{X: fx, Y: fy}
+}
+
+func (p *PathFinder) DrawDebugGrid(screen *ebiten.Image) {
+	for y := 0; y < p.Grid.NumRows(); y++ {
+		for x := 0; x < p.Grid.NumCols(); x++ {
+			if p.Grid.GetCellTile(path.GridCoord{X: x, Y: y}) == TileWall {
+				posX, posY := p.Grid.CoordToPos(path.GridCoord{X: x, Y: y})
+				vector.StrokeRect(screen, float32(posX), float32(posY), 32, 32, 2, color.RGBA{225, 225, 225, 255}, false)
+			}
+		}
+	}
 }

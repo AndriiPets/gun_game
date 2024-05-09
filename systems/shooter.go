@@ -15,6 +15,8 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
 	"github.com/solarlune/resolv"
+	"github.com/tanema/gween"
+	"github.com/tanema/gween/ease"
 
 	"github.com/yohamta/donburi"
 	"github.com/yohamta/donburi/ecs"
@@ -107,7 +109,7 @@ func spawnBullet(e *donburi.Entry, ecs *ecs.ECS) {
 	animation.Animation = bulletComp.Animation()
 
 	//bullet spawn position
-	spawnPosition := shooter.HolderPosition.Add(attackVec.MulScalar(22))
+	spawnPosition := shooter.HolderPosition.Add(attackVec.MulScalar(24))
 
 	obj := resolv.NewObject(spawnPosition.X, spawnPosition.Y, bulletData.Size, bulletData.Size)
 	obj.AddTags("bullet")
@@ -129,16 +131,41 @@ func UpdateWeaponSprite(ecs *ecs.ECS) {
 		shooter := components.Shooter.Get(e)
 		anim := components.Animation.Get(e)
 		attVec := components.AttackVector.Get(e)
+		weaponData := resources.WeaponMap[shooter.Type]
 
 		//update animation obj position based on shooter position
 		var pos dmath.Vec2
+		ran := shooter.HoldRange
 
 		//if on cooldown recoil sprite backwards
-		if !shooter.CanFire {
-			pos = shooter.HolderPosition.Add(attVec.Vec.MulScalar(10))
-		} else {
-			pos = dmath.Vec2(shooter.Position)
+		if shooter.WeaponFlash {
+			//weapon fierd apply new easing function for recoil
+			anim.Ease = gween.New(1, float32(shooter.HoldRange), float32(weaponData.Cooldown), ease.Linear)
+			ran = 1
+
+			//Spawn weapon flash animation
+			spawnPosition := shooter.HolderPosition.Add(attVec.Vec.MulScalar(37))
+			factory.CreateParticle(
+				ecs,
+				spawnPosition.X,
+				spawnPosition.Y,
+				factory.ParticleGunFlash,
+				anim.Rotation,
+				anim.FlipH,
+				anim.FlipV,
+			)
+			shooter.WeaponFlash = false
+
 		}
+		if !shooter.CanFire {
+			//update weapon position based on easing function
+			curr, finish := anim.Ease.Update(float32(ecs.Time.DeltaTime().Seconds()))
+			if !finish {
+				ran = float64(curr)
+			}
+		}
+
+		pos = shooter.HolderPosition.Add(attVec.Vec.MulScalar(ran))
 
 		obj := dresolv.GetObject(e)
 
@@ -160,19 +187,5 @@ func UpdateWeaponSprite(ecs *ecs.ECS) {
 			anim.FlipV = true
 		}
 
-		//Spawn weapon flash animation
-		if shooter.WeaponFlash {
-			spawnPosition := shooter.HolderPosition.Add(attVec.Vec.MulScalar(37))
-			factory.CreateParticle(
-				ecs,
-				spawnPosition.X,
-				spawnPosition.Y,
-				factory.ParticleGunFlash,
-				anim.Rotation,
-				anim.FlipH,
-				anim.FlipV,
-			)
-			shooter.WeaponFlash = false
-		}
 	})
 }

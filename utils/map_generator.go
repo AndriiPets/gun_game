@@ -80,6 +80,7 @@ func (w *World) GenerateMap(genType GenerationType) {
 	case DrunkWalk:
 		startX, startY := w.Map.GenerateDrunkWalk(' ', 'x', 0.8)
 		w.Map.Set(startX, startY, 'P')
+		w.Map.Set(startX+1, startY+1, 'e')
 
 	case RandomRooms:
 		rooms := w.Map.GenerateRandomRooms(' ', 'x', 10, 3, 3, 5, 5, true)

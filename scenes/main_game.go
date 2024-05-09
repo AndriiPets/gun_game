@@ -34,6 +34,7 @@ type MainScene struct {
 func (ms *MainScene) Update() {
 	ms.once.Do(ms.configure)
 	ms.ecs.Update()
+	ms.ecs.Time.Update()
 	ms.Time.Update()
 }
 
@@ -81,7 +82,7 @@ func (ms *MainScene) configure() {
 	ecs.AddRenderer(layers.Default, systems.DrawPlayer)
 	//ecs.AddRenderer(layers.Default, systems.DrawWeaponFlash)
 	ecs.AddRenderer(layers.Default, systems.DrawEnemyes)
-	ecs.AddRenderer(layers.Default, ai.DrawDebugAi)
+	ecs.AddRenderer(layers.System, ai.DrawDebugAi)
 	//ecs.AddRenderer(layers.Default, systems.DrawBullet)
 
 	//Draw animations for each layer
@@ -104,7 +105,7 @@ func (ms *MainScene) configure() {
 
 	for y, row := range world.Map.Data {
 		for x, val := range row {
-			posX, posY := x*config.BlockSize, y*config.BlockSize //works
+			posX, posY := (x*config.BlockSize)+config.BlockSize/2, (y*config.BlockSize)+config.BlockSize/2 //works
 			//fmt.Println(posX, posY)
 			//var block *donburi.Entry
 			if val == 'x' {

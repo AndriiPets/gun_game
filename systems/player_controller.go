@@ -171,6 +171,13 @@ func UpdatePlayer(ecs *ecs.ECS) {
 		}
 	}
 
+	//player weapon position
+	centerX, centerY := playerObj.Position.X+(playerObj.Size.X/2), playerObj.Position.Y+(playerObj.Size.Y/2)
+	weaponPosX, weaponPosY := centerX+attackVec.X, centerY+attackVec.Y
+
+	shooter.Position = math.NewVec2(weaponPosX, weaponPosY)
+	shooter.HolderPosition = math.NewVec2(centerX, centerY)
+
 }
 
 func PlayerString(ecs *ecs.ECS) string {
@@ -227,17 +234,6 @@ func DrawPlayer(ecs *ecs.ECS, screen *ebiten.Image) {
 
 		o := dresolv.GetObject(e)
 		playerColor := color.RGBA{0, 255, 60, 255}
-		//player := components.Player.Get(e)
-		attackVec := components.AttackVector.Get(e).Vec.MulScalar(15)
-		playerWeapon := components.Shooter.Get(e)
-		//fmt.Println(attackVec)
-
-		//player weapon position
-		centerX, centerY := o.Position.X+(o.Size.X/2), o.Position.Y+(o.Size.Y/2)
-		weaponPosX, weaponPosY := centerX+attackVec.X, centerY+attackVec.Y
-
-		playerWeapon.Position = math.NewVec2(weaponPosX, weaponPosY)
-		playerWeapon.HolderPosition = math.NewVec2(centerX, centerY)
 
 		vector.DrawFilledRect(screen, float32(o.Position.X), float32(o.Position.Y), float32(o.Size.X), float32(o.Size.Y), playerColor, false)
 		//vector.DrawFilledCircle(screen, float32(weaponPosX), float32(weaponPosY), 7, color.RGBA{255, 255, 255, 255}, false)

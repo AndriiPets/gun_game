@@ -31,11 +31,11 @@ var WeaponMap = map[string]Weapon{
 
 var ProjectileMap = map[string]Projectile{
 	"normal": {
-		Size:  4,
+		Size:  8,
 		Speed: 15.0,
 	},
 	"bounce": {
-		Size:  4,
+		Size:  8,
 		Speed: 15.0,
 	},
 }
