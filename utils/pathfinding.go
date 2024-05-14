@@ -107,7 +107,7 @@ func (p *PathFinder) DrawDebugGrid(screen *ebiten.Image) {
 		for x := 0; x < p.Grid.NumCols(); x++ {
 			if p.Grid.GetCellTile(path.GridCoord{X: x, Y: y}) == TileWall {
 				posX, posY := p.Grid.CoordToPos(path.GridCoord{X: x, Y: y})
-				vector.StrokeRect(screen, float32(posX), float32(posY), 32, 32, 2, color.RGBA{225, 225, 225, 255}, false)
+				vector.StrokeRect(screen, float32(posX)-float32(config.BlockSize/2), float32(posY)-float32(config.BlockSize/2), float32(config.BlockSize), float32(config.BlockSize), 2, color.RGBA{225, 225, 225, 255}, false)
 			}
 		}
 	}

@@ -1,6 +1,8 @@
 package ai
 
 import (
+	"fmt"
+
 	"github.com/AndriiPets/FishGame/components"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/quasilyte/pathing"
@@ -29,19 +31,24 @@ func UpdateGruntAI(ecs *ecs.ECS, enemy *donburi.Entry, player *donburi.Entry) {
 		ai.Path = atempt_build_path(ecs, obj, playerObj)
 
 		//before shooting make shure actor has line of sight
-		if line_of_sight_check(ecs, obj, playerObj) {
+		if blockNum, canSee := line_of_sight_check(ecs, obj, playerObj); canSee {
 
 			if roll_attack_initiative(ai.AgressionModifier, 100) && shooter.CanFire {
 				shooter.Fire = true
 			}
 
-		}
+			//if player is too close attempt to flee
+			if blockNum <= 10 {
+				ai.PathCurrent = ai.Path.Steps.Next().Reversed()
+			}
 
-		ai.PathCurrent = ai.Path.Steps.Next()
+		} else {
+			ai.PathCurrent = ai.Path.Steps.Next()
+		}
 
 		if ebiten.IsKeyPressed(ebiten.KeyV) {
 			ai.Path.Steps.Rewind()
 		}
-		//fmt.Println(ai.Path.Steps.String(), ai.PathCurrent)
+		fmt.Println(ai.Path.Steps.String(), ai.PathCurrent)
 	}
 }

@@ -37,6 +37,7 @@ func CreateEnemy(ecs *ecs.ECS, posX, posY float64, enemyType components.EnemyTyp
 		AIType:            components.AITypeShooter,
 		VisionRadius:      200,
 		AgressionModifier: 3,
+		ActionModifier:    5,
 	})
 
 	//setup animation

@@ -37,7 +37,7 @@ func atempt_build_path(ecs *ecs.ECS, startObj, endObj *resolv.Object) pathing.Bu
 	return steps
 }
 
-func line_of_sight_check(ecs *ecs.ECS, startObj, endObj *resolv.Object) bool {
+func line_of_sight_check(ecs *ecs.ECS, startObj, endObj *resolv.Object) (int, bool) {
 	spaceEntry := components.Space.MustFirst(ecs.World)
 	space := components.Space.Get(spaceEntry)
 
@@ -55,10 +55,10 @@ func line_of_sight_check(ecs *ecs.ECS, startObj, endObj *resolv.Object) bool {
 		}
 
 		if cell.ContainsTags("solid") {
-			return false
+			return len(sightLine), false
 		}
 	}
 
-	return true
+	return len(sightLine), true
 
 }

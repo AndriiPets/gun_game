@@ -62,6 +62,12 @@
         },
 
         {
+            "file": "img/wall_16x16.png",
+            "w": 64,
+            "h": 16
+        },
+
+        {
             "file": "img/floor.png",
             "w": 64,
             "h": 16

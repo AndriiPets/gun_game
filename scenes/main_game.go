@@ -105,7 +105,7 @@ func (ms *MainScene) configure() {
 
 	for y, row := range world.Map.Data {
 		for x, val := range row {
-			posX, posY := (x*config.BlockSize)+config.BlockSize/2, (y*config.BlockSize)+config.BlockSize/2 //works
+			posX, posY := (x * config.BlockSize), (y * config.BlockSize) //works
 			//fmt.Println(posX, posY)
 			//var block *donburi.Entry
 			if val == 'x' {

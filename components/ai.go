@@ -16,6 +16,7 @@ type AIData struct {
 	AIType            AIType
 	VisionRadius      float64
 	AgressionModifier int
+	ActionModifier    int
 	Path              pathing.BuildPathResult
 	PathCurrent       pathing.Direction
 }
